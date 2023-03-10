@@ -2,6 +2,7 @@
 """Defines the HBnB console."""
 import cmd
 from shlex import split
+from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
