@@ -68,7 +68,18 @@ class HBNBCommand(cmd.Cmd):
                 print(objs[key])
 
     def do_destroy(self, arg):
-        """Deletes an"""            
+        """Deletes an"""
+        arg_list = check_args(arg)
+        if arg_list:
+            if len(arg_list) == 1:
+                print("** instance id missing **")
+            else:
+                key = "{}.{}".format(*arg_list)
+                if key in self.storage.all():
+                    del self.storage.all()[key]
+                    self.storage.save()
+                else:
+                    print("** no instance found **")         
 
 if __name__ == '__main__':
     TurtleShell().cmdloop()
