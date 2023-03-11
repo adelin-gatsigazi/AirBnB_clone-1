@@ -43,16 +43,14 @@ class HBNBCommand(cmd.Cmd):
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
-            if len(args) < 2:
+
+            try:
+                self.show_obj(storage.all(), args)
+            except KeyError:
+                print("** no instance found **")
+            except IndexError:
                 print("** instance id missing **")
 
-            class_name = args[0]
-            obj_id = args[1]
-            key = f"{class_name}.{obj_id}"
-            obj_dict = storage.all()
-
-            if key not in obj_dict.keys():
-                print("** no instance found **")
         else:
             print("** class name missing **")
 
@@ -63,18 +61,14 @@ class HBNBCommand(cmd.Cmd):
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
-            if len(args) < 2:
-                print("** instance id missing **")
+            
+            try:
+                self.destroy(storage.all(), args)
 
-            class_name = args[0]
-            obj_id = args[1]
-            key = f"{class_name}.{obj_id}"
-            obj_dict = storage.all()
-
-            if key not in obj_dict.keys():
+            except KeyError:
                 print("** no instance found **")
-                del obj_dict[key]
-                storage.save()
+            except IndexError:
+                print("** instance id missing **")
         else:
             print("** class name missing **")
 
@@ -103,32 +97,43 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """ Update command that updates an instance """
-        args = arg.split(" ")
-
-        if len(args) == 0:
+        if arg:
+            args = arg.split(" ")
+            if args[0] not in self.classes.keys():
+                print("** class doesn't exist **")
+                return
+            try:
+                dic = storage.all()
+                obj = dic[args[0] + "." + args[1]]
+                self.change_value(obj, args)
+                storage.save()
+            except KeyError:
+                print("** no instance found **")
+        else:
             print("** class name missing **")
-        elif args[0] not in self.classes.keys():
-            print("** class doesn't exist **")
-        elif len(args) == 1:
-            print("** instance id missing **")
-        name = args[0]
-        obj_id = args[1]
-        obj_dict = storage.all()
-        key = f"{class_name}.{obj_id}"
-        if key not in obj_dict.keys():
-            print("** no instance found **")
-        if len(args) == 2:
+
+    def show_obj(self, dic, args):
+        """Print out a particular object"""
+        dic = storage.all()
+        obj = dic[args[0] + "." + args[1]]
+        print(obj)
+
+    def destroy(self, dic, args):
+        """Destroy an object"""
+        del dic[args[0] + "." + args[1]]
+        storage.save()
+
+    def change_value(self, obj, args):
+        """change values of attributes of an object"""
+        if len(args) < 3:
             print("** attribute name missing **")
-        if len(args) < 4:
+            return
+        elif len(args) < 4:
             print("** value missing **")
+            return
         try:
-           if hasattr(obj, args[2]):
-               value = type(getattr(key, args[2]))(args[3])
-        except (AttributeError, ValueError):
-           print("** invalid value **")
-        if argv[2] in ("id", "created_at", "updated_at"):
-           return
-    setattr(key, argv[2], attr_value)
-    models.storage.save()
+            if hasattr(obj, args[2]):
+                value = type(getattr(obj, args[2]))(args[3])
+                setattr(obj, args[2], value)
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
