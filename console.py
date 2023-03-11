@@ -4,6 +4,7 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 
+
 class HBNBCommand(cmd.Cmd):
     """ Handles the command"""
 
@@ -61,7 +62,6 @@ class HBNBCommand(cmd.Cmd):
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
-            
             try:
                 self.destroy(storage.all(), args)
 
@@ -82,7 +82,7 @@ class HBNBCommand(cmd.Cmd):
             for obj in obj_dict.values():
                 obj_list.append(str(obj))
         else:
-            try: 
+            try:
                 args = arg.split(" ")
                 name = args[0]
                 class_name = self.classes[name]
@@ -92,7 +92,6 @@ class HBNBCommand(cmd.Cmd):
             except KeyError:
                 print("** class doesn't exist **""")
                 return
-
         print(obj_list)
 
     def do_update(self, arg):
@@ -135,5 +134,9 @@ class HBNBCommand(cmd.Cmd):
             if hasattr(obj, args[2]):
                 value = type(getattr(obj, args[2]))(args[3])
                 setattr(obj, args[2], value)
+        except TypeError:
+            print("** value missing **")
+
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
