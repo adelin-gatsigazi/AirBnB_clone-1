@@ -134,6 +134,8 @@ class HBNBCommand(cmd.Cmd):
             if hasattr(obj, args[2]):
                 value = type(getattr(obj, args[2]))(args[3])
                 setattr(obj, args[2], value)
+            else:
+                setattr(obj, args[2], args[3])
         except TypeError:
             print("** value missing **")
 
