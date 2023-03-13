@@ -44,7 +44,7 @@ class HBNBCommand(cmd.Cmd):
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
-
+                return
             try:
                 self.show_obj(storage.all(), args)
             except KeyError:
@@ -62,6 +62,7 @@ class HBNBCommand(cmd.Cmd):
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
+                return
             try:
                 self.destroy(storage.all(), args)
 
