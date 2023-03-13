@@ -3,14 +3,22 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
-
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+import shlex
 
 class HBNBCommand(cmd.Cmd):
     """ Handles the command"""
 
     prompt = "(hbnb)"
 
-    classes = {"BaseModel": BaseModel}
+    classes = {"BaseModel": BaseModel, "User": User, "State": State,
+               "City": City, "Amenity": Amenity, "Place": Place,
+               "Review": Review}
 
     def do_quit(self, arg):
         """ Quit command to exit the program """
@@ -40,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
         """ Show Command that prints the string representation
         of an object """
         if arg:
-            args = arg.split(" ")
+            args = shlex.split(arg)
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
@@ -58,7 +66,7 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, arg):
         """ Destroy command that destroys an object """
         if arg:
-            args = arg.split(" ")
+            args = shlex.split(arg)
 
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
@@ -84,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
                 obj_list.append(str(obj))
         else:
             try:
-                args = arg.split(" ")
+                args = shlex.split(arg)
                 name = args[0]
                 class_name = self.classes[name]
                 for obj in obj_dict.values():
@@ -98,7 +106,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """ Update command that updates an instance """
         if arg:
-            args = arg.split(" ")
+            args = shlex.split(arg)
             if args[0] not in self.classes.keys():
                 print("** class doesn't exist **")
                 return
