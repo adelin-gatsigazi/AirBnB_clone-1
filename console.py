@@ -160,6 +160,8 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
             except KeyError:
                 print("** no instance found **")
+            except IndexError:
+                print("** instance id missing **")
         else:
             print("** class name missing **")
 
